@@ -72,3 +72,38 @@ resource "google_project_iam_member" "deployer_log_writer" {
   role    = "roles/logging.logWriter"
   member  = "serviceAccount:${google_service_account.deployer.email}"
 }
+
+# Terraform refresh reads google_project_service resources (it lists enabled
+# services on the project). Without this binding the deployer SA hits
+# "Permission denied to list services" the moment GHA runs `terraform apply`.
+resource "google_project_iam_member" "deployer_serviceusage_admin" {
+  project = var.project_id
+  role    = "roles/serviceusage.serviceUsageAdmin"
+  member  = "serviceAccount:${google_service_account.deployer.email}"
+}
+
+# Terraform reads Secret Manager resources during refresh as well (versions,
+# IAM, etc.). secretmanager.admin is the catch-all that covers list + read.
+# (Runtime SA only gets per-secret accessor; deployer gets project-wide admin
+# because Terraform iterates over all secrets it manages.)
+resource "google_project_iam_member" "deployer_secret_admin" {
+  project = var.project_id
+  role    = "roles/secretmanager.admin"
+  member  = "serviceAccount:${google_service_account.deployer.email}"
+}
+
+# Terraform refresh reads SAs and their IAM policies (e.g. runtime SA, WIF
+# bindings). roles/iam.securityAdmin covers reading + writing SA IAM policies.
+resource "google_project_iam_member" "deployer_iam_security_admin" {
+  project = var.project_id
+  role    = "roles/iam.securityAdmin"
+  member  = "serviceAccount:${google_service_account.deployer.email}"
+}
+
+# Terraform refresh reads Workload Identity Pools / providers it manages. The
+# iam.workloadIdentityPoolAdmin role covers list + read + write on those.
+resource "google_project_iam_member" "deployer_wif_admin" {
+  project = var.project_id
+  role    = "roles/iam.workloadIdentityPoolAdmin"
+  member  = "serviceAccount:${google_service_account.deployer.email}"
+}
