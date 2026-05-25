@@ -53,3 +53,22 @@ resource "google_service_account_iam_member" "deployer_acts_as_runtime" {
   role               = "roles/iam.serviceAccountUser"
   member             = "serviceAccount:${google_service_account.deployer.email}"
 }
+
+# Deployer also needs to actAs *itself* — cloudbuild.yaml sets
+# `serviceAccount: ajoa-deployer` so Cloud Build runs builds under this SA.
+# A caller can't impersonate any SA (even one it nominally is) without an
+# explicit roles/iam.serviceAccountUser binding.
+resource "google_service_account_iam_member" "deployer_acts_as_self" {
+  service_account_id = google_service_account.deployer.name
+  role               = "roles/iam.serviceAccountUser"
+  member             = "serviceAccount:${google_service_account.deployer.email}"
+}
+
+# When a build runs as a user-specified SA, that SA needs roles/logging.logWriter
+# (cloudbuild.builds.editor doesn't cover it). Without this Cloud Build refuses
+# to start the build with "service account requires the role 'roles/logging.logWriter'".
+resource "google_project_iam_member" "deployer_log_writer" {
+  project = var.project_id
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:${google_service_account.deployer.email}"
+}
