@@ -26,6 +26,15 @@ dist/
 # Local-only design doc (personal context — not for the public repo)
 CLAUDE.md
 
+# Terraform
+deploy/gcp/.terraform/
+deploy/gcp/terraform.tfvars
+deploy/gcp/*.tfstate
+deploy/gcp/*.tfstate.backup
+deploy/gcp/plan.out
+deploy/gcp/crash.log
+# .terraform.lock.hcl IS committed on purpose (pins provider versions).
+
 # Logs, caches, transient artifacts
 *.log
 .ruff_cache/

@@ -1,0 +1,43 @@
+# Controls what `gcloud builds submit` uploads as build source. Keep this lean
+# so we don't ship .venv (~hundreds of MB), tests, frontend, etc. to Cloud Build.
+# This file replaces the default behaviour of falling back to .gitignore.
+
+.git
+.gitignore
+.github
+
+# Python dev artifacts
+**/__pycache__
+**/*.py[cod]
+**/*.egg-info
+**/.venv
+**/venv
+**/.pytest_cache
+**/.ruff_cache
+**/.mypy_cache
+**/.coverage
+**/htmlcov
+**/coverage.xml
+
+# Tests / non-runtime trees (Dockerfile only COPYs backend/{requirements.txt,app})
+backend/tests
+e2e
+eval
+frontend
+
+# Don't reupload terraform state / local plans
+deploy/gcp/.terraform
+deploy/gcp/.terraform.lock.hcl
+deploy/gcp/plan.out
+deploy/gcp/terraform.tfstate*
+deploy/gcp/terraform.tfvars
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Editor / OS
+.idea
+.vscode
+.DS_Store
