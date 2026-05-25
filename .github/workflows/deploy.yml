@@ -1,0 +1,97 @@
+name: deploy
+
+# Build + push image to Artifact Registry, then terraform apply to roll
+# the Cloud Run service forward to the new image. Auth is OIDC via WIF —
+# no long-lived service account keys.
+on:
+  push:
+    branches: [master]
+    # Only re-deploy when something that can actually change the running
+    # service changes. Pure-docs changes shouldn't trigger a build.
+    paths:
+      - "backend/**"
+      - "deploy/**"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  PROJECT_ID: ajoa-fwsjvo
+  REGION: us-central1
+  SERVICE_NAME: ajoa-backend
+  WIF_PROVIDER: projects/312694707361/locations/global/workloadIdentityPools/ajoa-github-pool/providers/github-oidc
+  DEPLOYER_SA: ajoa-deployer@ajoa-fwsjvo.iam.gserviceaccount.com
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    # OIDC needs id-token: write so GitHub mints a token GCP can verify.
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to GCP (WIF)
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ env.WIF_PROVIDER }}
+          service_account: ${{ env.DEPLOYER_SA }}
+
+      - name: Set up gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Set image tag (short SHA)
+        id: vars
+        run: echo "tag=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Build + push image (Cloud Build)
+        run: |
+          gcloud builds submit \
+            --config=deploy/gcp/cloudbuild.yaml \
+            --substitutions=_TAG=${{ steps.vars.outputs.tag }} \
+            .
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.15.4
+          terraform_wrapper: false
+
+      - name: Terraform init
+        working-directory: deploy/gcp
+        run: terraform init -input=false
+
+      - name: Terraform apply (roll service to new image)
+        working-directory: deploy/gcp
+        run: |
+          IMAGE="${REGION}-docker.pkg.dev/${PROJECT_ID}/${SERVICE_NAME}/${SERVICE_NAME}:${{ steps.vars.outputs.tag }}"
+          terraform apply -auto-approve -input=false \
+            -var="project_id=${PROJECT_ID}" \
+            -var="region=${REGION}" \
+            -var="service_name=${SERVICE_NAME}" \
+            -var="image=${IMAGE}"
+
+      - name: Smoke test /health
+        working-directory: deploy/gcp
+        run: |
+          URL=$(terraform output -raw service_url)
+          echo "Hitting ${URL}/health"
+          for i in 1 2 3 4 5; do
+            if curl -sf -m 10 "${URL}/health"; then
+              echo "OK"
+              exit 0
+            fi
+            echo "retry ${i}…"
+            sleep 5
+          done
+          echo "smoke test failed"
+          exit 1

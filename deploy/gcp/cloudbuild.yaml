@@ -1,0 +1,26 @@
+# Cloud Build pipeline: build the image, push to Artifact Registry.
+# Works from both local `gcloud builds submit` and GitHub Actions.
+# The deploy step (Cloud Run revision swap) is handled by `terraform apply` in
+# the GHA workflow, not here, so this file stays focused on build+push.
+
+substitutions:
+  _REGION: us-central1
+  _REPO: ajoa-backend
+  _IMAGE: ajoa-backend
+  _TAG: latest # CI overrides to a short git sha: --substitutions=_TAG=$(git rev-parse --short HEAD)
+
+images:
+  - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE}:${_TAG}"
+  - "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE}:latest"
+
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - --file=deploy/Dockerfile
+      - --tag=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE}:${_TAG}
+      - --tag=${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE}:latest
+      - .
+
+options:
+  logging: CLOUD_LOGGING_ONLY

@@ -1,0 +1,14 @@
+# Copy to terraform.tfvars (gitignored) and fill in for your environment.
+
+project_id    = "ajoa-fwsjvo"
+region        = "us-central1"
+service_name  = "ajoa-backend"
+
+# Leave commented for the first apply — Cloud Run will boot a public "hello"
+# placeholder image. After `gcloud builds submit` pushes the real image,
+# uncomment and re-apply to switch the service over.
+# image = "us-central1-docker.pkg.dev/ajoa-fwsjvo/ajoa-backend/ajoa-backend:latest"
+
+# Lock WIF to this repo / branch. Use "*" for branch to allow all branches.
+github_repo   = "seriserendipia/ai-job-outreach-agent"
+github_branch = "master"

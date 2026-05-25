@@ -1,0 +1,46 @@
+# Docker build context is the repo root. Keep the image small and don't ship
+# secrets / dev artifacts. The Dockerfile only COPYs backend/{requirements.txt,app},
+# so most exclusions here are belt-and-suspenders.
+
+# Git / CI
+.git
+.gitignore
+.github
+
+# Python dev artifacts
+**/__pycache__
+**/*.py[cod]
+**/*.egg-info
+**/.venv
+**/venv
+**/.pytest_cache
+**/.ruff_cache
+**/.mypy_cache
+**/.coverage
+**/htmlcov
+**/coverage.xml
+
+# Secrets / env
+.env
+.env.*
+!.env.example
+
+# Tests / non-runtime trees
+backend/tests
+e2e
+eval
+frontend
+deploy
+
+# Editor / OS
+.idea
+.vscode
+.DS_Store
+
+# Docs / project meta (not needed in the image)
+*.md
+LICENSE
+CLAUDE.md
+
+# Notebooks
+**/.ipynb_checkpoints
