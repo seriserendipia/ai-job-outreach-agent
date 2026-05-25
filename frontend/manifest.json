@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "AI Job Outreach Agent",
+  "version": "0.3.0",
+  "description": "Multi-agent assistant that drafts and sends recruiter outreach emails from a LinkedIn job page.",
+  "permissions": ["storage", "identity", "sidePanel"],
+  "host_permissions": [
+    "https://www.linkedin.com/*",
+    "http://localhost:8000/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Open AI Job Outreach"
+  },
+  "side_panel": {
+    "default_path": "sidebar.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.linkedin.com/jobs/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "oauth2": {
+    "client_id": "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
+    "scopes": ["https://www.googleapis.com/auth/gmail.send"]
+  }
+}

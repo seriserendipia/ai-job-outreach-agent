@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Job Outreach Agent</title>
+    <link rel="stylesheet" href="sidebar.css" />
+  </head>
+  <body>
+    <header>
+      <h1>AI Job Outreach Agent</h1>
+    </header>
+
+    <main>
+      <!-- Focused job posting (read-only preview) -->
+      <section class="card focus-card">
+        <div class="card-eyebrow">Focused on</div>
+        <div id="job-title" class="job-title">Reading this page…</div>
+        <div id="job-company" class="job-company hidden"></div>
+        <div id="jd-preview" class="jd-preview hidden"></div>
+      </section>
+
+      <!-- Resume — single inline row. Empty: upload + paste links. Filled:
+           just the filename (click to replace) + an × to clear. -->
+      <section class="card resume-card">
+        <div class="resume-row">
+          <label class="upload-link" for="resume-file">
+            <span id="upload-label">📄 Upload .txt</span>
+          </label>
+          <input type="file" id="resume-file" accept=".txt,.md,text/plain" hidden />
+          <span class="dot" id="paste-divider">·</span>
+          <a id="paste-toggle" class="link-btn" href="#">paste</a>
+          <a id="clear-resume" class="link-btn hidden" href="#"
+             style="margin-left:auto">×</a>
+        </div>
+        <textarea id="resume-paste" class="hidden" rows="4"
+          placeholder="Paste your resume here…"></textarea>
+      </section>
+
+      <!-- Primary CTA -->
+      <button id="generate-btn" class="primary">Generate outreach email</button>
+
+      <!-- AI-generated email — read-only preview. The user does not edit this
+           directly; they ask the AI to revise via the chat below. -->
+      <section class="card hidden" id="email-card">
+        <div class="card-eyebrow">📧 AI draft</div>
+        <div id="email-preview" class="email-preview">
+          <span class="email-placeholder">Generated email will appear here.</span>
+        </div>
+        <div id="critique" class="critique hidden"></div>
+
+        <div class="card-eyebrow small">Ask the AI to change something</div>
+        <div class="row">
+          <input type="text" id="feedback" placeholder="e.g. make it shorter, mention my OSS project" />
+          <button id="revise-btn">Revise</button>
+        </div>
+      </section>
+
+      <!-- Send (hidden until first generation) -->
+      <section class="card hidden" id="send-card">
+        <div class="card-eyebrow">Send</div>
+        <input type="email" id="to" placeholder="recruiter@company.com" />
+        <div id="recruiter-hint" class="muted"></div>
+        <button id="send-btn" class="primary">📨 Send via Gmail</button>
+      </section>
+
+      <div id="status" class="status"></div>
+    </main>
+
+    <script src="sidebar.js"></script>
+  </body>
+</html>

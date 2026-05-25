@@ -1,0 +1,31 @@
+Acme Intelligence — AI Engineer, Agent Platform
+San Francisco, CA (Hybrid)
+
+About the role
+Acme Intelligence builds an automation platform for operations teams. We are
+hiring an AI Engineer to design and ship the multi-agent systems at the core of
+our product. You will own agent workflows end to end: orchestration, tool use,
+evaluation, and reliability.
+
+What you'll do
+- Design multi-agent workflows that decompose complex tasks across specialized
+  agents.
+- Implement agent patterns such as ReAct tool-use loops, self-reflection, and
+  hierarchical delegation.
+- Build evaluation harnesses so we can measure and improve agent quality.
+- Ship production services that expose these agents to our web app.
+
+What we're looking for
+- 3+ years of software engineering experience.
+- Hands-on experience with LLM application frameworks (LangGraph, CrewAI, or
+  similar) and structured tool calling.
+- Strong Python; comfort with FastAPI or a similar framework.
+- Experience with retrieval pipelines and prompt engineering.
+- A pragmatic approach to evaluation and reliability.
+
+Nice to have
+- Open-source contributions to the agent ecosystem.
+- Experience with observability tooling for LLM applications.
+
+We move fast and value engineers who can own a problem from design to
+production. Apply with a short note on a multi-agent system you have built.

@@ -1,0 +1,322 @@
+:root {
+  --accent: #4f46e5;
+  --accent-dark: #4338ca;
+  --ink: #1f2433;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+  --bg: #f6f7f9;
+  --ok: #047857;
+  --ok-bg: #ecfdf5;
+  --warn: #b45309;
+  --warn-bg: #fffbeb;
+  --error: #b91c1c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--bg);
+}
+
+header {
+  padding: 10px 14px;
+  background: var(--accent);
+  color: #fff;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+main {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ------------ generic card ------------ */
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.card-eyebrow {
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.card-eyebrow.small {
+  margin-top: 4px;
+}
+
+/* ------------ Focused job card (most prominent) ------------ */
+.focus-card {
+  border-left: 3px solid var(--accent);
+}
+
+.job-title {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.job-company {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.jd-preview {
+  max-height: 90px;
+  overflow-y: auto;
+  font-size: 12px;
+  color: #4b5260;
+  background: #f9fafb;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  white-space: pre-wrap;
+  line-height: 1.4;
+  margin-top: 2px;
+}
+
+/* ------------ Resume card (single inline row) ------------ */
+.resume-card {
+  padding: 8px 10px;
+}
+
+.resume-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+
+.upload-link {
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.upload-link:hover {
+  text-decoration: underline;
+}
+
+.dot {
+  color: var(--muted);
+}
+
+.link-btn {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.link-btn:hover {
+  text-decoration: underline;
+}
+
+.resume-status {
+  margin-left: auto;
+  color: var(--ok);
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.resume-status .clear-link {
+  color: var(--muted);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.resume-status .clear-link:hover {
+  color: var(--error);
+}
+
+/* ------------ Form controls ------------ */
+textarea,
+input[type="text"],
+input[type="email"] {
+  width: 100%;
+  font: inherit;
+  color: var(--ink);
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  resize: vertical;
+  background: #fff;
+}
+
+textarea:focus,
+input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+  border-color: var(--accent);
+}
+
+/* ------------ Buttons ------------ */
+button {
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+button:hover:not(:disabled) {
+  background: #f0f0f5;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  padding: 11px 14px;
+}
+
+button.primary:hover:not(:disabled) {
+  background: var(--accent-dark);
+}
+
+.row {
+  display: flex;
+  gap: 6px;
+}
+
+.row input {
+  flex: 1;
+}
+
+/* ------------ Misc ------------ */
+.muted {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* ------------ Email preview (placeholder is read-only; once filled, the
+   inner fields ARE editable but styled to keep the "preview" feel — no obvious
+   borders, no input chrome — so the AI authorship is still the dominant
+   reading.) ------------ */
+.email-preview {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.email-placeholder {
+  display: block;
+  padding: 16px;
+  color: var(--muted);
+  font-style: italic;
+  text-align: center;
+}
+
+/* Subject row: bold, on a faint tinted bar, full-width, no border. */
+.email-subject-input {
+  width: 100%;
+  font: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 10px 12px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: #fafbff;
+  border-radius: 0;
+  line-height: 1.4;
+  color: var(--ink);
+  outline: none;
+}
+
+.email-subject-input:focus {
+  background: #f0f1ff;
+}
+
+/* Body: looks like flowing email text; only a soft cursor outline on focus.
+   Capped so the whole sidebar fits in a 900px viewport without page-level
+   scroll — overflow inside the textarea is fine. */
+.email-body-input {
+  width: 100%;
+  border: 0;
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink);
+  resize: vertical;
+  height: 180px;
+  outline: none;
+  background: transparent;
+  border-radius: 0;
+  display: block;
+}
+
+.email-body-input:focus {
+  background: #fcfcff;
+}
+
+.critique {
+  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+
+.critique.ok {
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+
+.critique.warn {
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+
+.status {
+  font-size: 12px;
+  color: var(--muted);
+  min-height: 16px;
+  text-align: center;
+}
+
+.status.error {
+  color: var(--error);
+}
+
+.hidden {
+  display: none;
+}
+
+a {
+  color: var(--accent);
+}

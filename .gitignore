@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+
+# Env / secrets
+.env
+.env.local
+*.local
+
+# LangGraph
+.langgraph_api/
+
+# Node / extension build
+node_modules/
+dist/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# Local-only design doc (personal context — not for the public repo)
+CLAUDE.md
+
+# Logs, caches, transient artifacts
+*.log
+.ruff_cache/
+.mypy_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# Notebook checkpoints
+.ipynb_checkpoints/

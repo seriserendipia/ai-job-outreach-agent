@@ -1,0 +1,30 @@
+Jordan Avery
+San Francisco, CA | jordan.avery.dev@example.com | github.com/jordanavery
+
+SUMMARY
+Software engineer with 4 years of experience building backend services and
+LLM-powered features. Comfortable across Python and TypeScript, with recent
+focus on agentic systems and retrieval pipelines.
+
+EXPERIENCE
+Software Engineer, Northwind Logistics (2022 - present)
+- Built a document-processing service handling 40k shipping documents/day,
+  cutting manual data entry by 65%.
+- Designed an LLM extraction pipeline (OpenAI + structured output) with a
+  validation/retry layer that raised field-level accuracy from 82% to 96%.
+- Migrated a Flask monolith to FastAPI, reducing p95 latency by 38%.
+
+Backend Engineer, Brightline Apps (2020 - 2022)
+- Owned the notifications service (Python, PostgreSQL, Redis) serving 1.2M users.
+- Added an internal search feature with Elasticsearch and relevance tuning.
+
+PROJECTS
+- "deskmate": an open-source CLI assistant that plans and executes multi-step
+  shell tasks using a tool-calling loop. 600+ GitHub stars.
+
+SKILLS
+Python, TypeScript, FastAPI, PostgreSQL, Redis, Docker, OpenAI API,
+retrieval-augmented generation, prompt engineering, AWS.
+
+EDUCATION
+B.S. Computer Science, University of Washington (2020)
