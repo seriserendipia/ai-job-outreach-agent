@@ -6,24 +6,23 @@ description, finds a recruiter contact, drafts a tailored outreach email through
 a write-and-critique loop, and sends it via Gmail.
 
 The project is a focused, end-to-end demonstration of multi-agent orchestration:
-hierarchical delegation, a ReAct tool-use loop, and a self-reflection loop —
-each one load-bearing, not decorative.
+hierarchical delegation, a ReAct tool-use loop, and a self-reflection loop.
 
 ## What it does
 
 1. You open a LinkedIn job posting; the extension sidebar reads the page.
-2. You paste your resume once (stored locally in the browser).
+2. You paste your resume at the first time (stored locally in the browser).
 3. **Generate** runs the agent graph: it parses the posting, hunts down a
    recruiter contact, drafts an email, and revises it against a quality rubric.
 4. You can ask for changes in plain language ("make it shorter") — follow-up
    turns resume the same job context and only re-run what's needed.
-5. **Send** delivers it through your Gmail account.
+5. Automatically identifies suitable recruiter based on job descriptions and retrieves their email addresses.
+6. **Send** delivers it through your Gmail account.
 
 ## Architecture
 
-The backend is a single LangGraph `StateGraph`. Think of it as a shared
-blackboard (`OutreachState`) plus a set of nodes that transform it — not a
-fixed pipeline.
+The backend is a single LangGraph `StateGraph`. It is a shared
+blackboard (`OutreachState`) plus a set of nodes that transform it.
 
 ```mermaid
 graph TD
