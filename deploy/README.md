@@ -114,16 +114,25 @@ deploy/
 | 8 | 写 `deploy/gcp/*.tf` 全部 | claude | ✅ |
 | 9 | `terraform init` + `terraform plan` —— 你过 plan | claude→user | ✅ |
 | 10 | `terraform apply`(经你 OK 后)| claude | ✅ 30 resources |
-| 11 | `gcloud builds submit` 推首个镜像 | claude | ✅ image `:bfc2142` |
-| 12 | 把真 secret 值塞 Secret Manager(或你给我我塞)| user/claude | ⬜ **需 user 提供 OPENAI/TAVILY key** |
+| 11 | `gcloud builds submit` 推首个镜像 | claude | ✅ image `:bfc2142` (本地 → tag `local-deploy`) |
+| 12 | 把真 secret 值塞 Secret Manager(或你给我我塞)| user/claude | ⏸ 用户决定跳过,保留 PLACEHOLDER |
 | 13 | 端到端验证:`curl Cloud Run URL/health` | claude | ✅ `/health` 200 |
 | 14 | 写 `.github/workflows/deploy.yml` + WIF 配置 | claude | ✅ |
-| 15 | 推一次小改动到 master 测自动 deploy | claude | ⬜ **需 user push 到 GitHub** |
+| 15 | 推一次小改动到 master 测自动 deploy | claude | ✅ GHA run `26424307428` 2m15s 全绿 (image `:5df1d89` → tag `remote-deploy-success`) |
 | 16 | 截图/录 URL 给简历 | user | ⬜ URL=`https://ajoa-backend-evzkfuxfda-uc.a.run.app` |
-| 17 | `terraform destroy` 清资源 + `gcloud projects delete` | claude+user | ⬜ |
+| 17 | `terraform destroy` 清资源 + `gcloud projects delete` | claude+user | ⬜ 等 user 截图后 |
 | 18 | 容器卸 gcloud + terraform | claude | ⬜ |
 
-**当前部署状态:** Cloud Run service `ajoa-backend` 已经活在 `https://ajoa-backend-evzkfuxfda-uc.a.run.app`,运行的是真镜像 `:bfc2142`,`/health` 返回 200。Secrets 是 PLACEHOLDER 值,所以 `/compose`(调 LLM/Tavily)还跑不了。
+**当前部署状态:** Cloud Run service `ajoa-backend` 活在 `https://ajoa-backend-evzkfuxfda-uc.a.run.app`,跑的是 **CI 自动推的镜像 `:5df1d89`** (revision `ajoa-backend-00003-842`),`/health` 200。CI/CD 链路完整验过 ✅: push to master → GitHub OIDC token → WIF exchange → impersonate `ajoa-deployer` → Cloud Build → image push → `terraform apply` → smoke test。2m15s 全绿。
+
+Secrets 仍是 PLACEHOLDER (用户选择跳过),所以 `/compose` (实际调 LLM/Tavily) 不能跑;`/health` 与 `/docs` 端点足够当简历截图证据。
+
+### 两个 git tag
+
+- `local-deploy` → 标记**本地手动部署成功**那次 (image `:bfc2142`)。这是在容器里直接跑 `gcloud builds submit` + `terraform apply` 的版本。
+- `remote-deploy-success` → 标记**远程 CI 自动部署首次全绿**那次 (master commit `5df1d89`,GHA run `26424307428`)。这是 GHA workflow 通过 WIF 自动滚出来的版本。
+
+`git checkout <tag>` 或 `git show <tag>` 快速切回任一参照点。
 
 ---
 

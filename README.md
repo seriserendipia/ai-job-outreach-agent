@@ -122,4 +122,32 @@ backend/app/tools/   web search + Gmail send
 backend/app/main.py  FastAPI server (/compose, /send)
 frontend/            Chrome extension (Manifest V3)
 eval/                reflection-loop eval + sample data
+deploy/              Dockerfile + Terraform for GCP Cloud Run + GHA workflow
 ```
+
+## Deployment
+
+[![deploy](https://github.com/seriserendipia/ai-job-outreach-agent/actions/workflows/deploy.yml/badge.svg?branch=master)](https://github.com/seriserendipia/ai-job-outreach-agent/actions/workflows/deploy.yml)
+
+The backend is deployed to **Google Cloud Run** as a containerized FastAPI
+service. Every piece of GCP infra — Artifact Registry, Cloud Run v2 service,
+Secret Manager, runtime + deployer service accounts with least-privilege IAM,
+and a Workload Identity Federation provider locked to this repo + branch — is
+managed by **Terraform** (`deploy/gcp/*.tf`), with state on GCS.
+
+Push-to-`master` triggers `.github/workflows/deploy.yml`, which:
+
+1. mints a GitHub OIDC token, exchanges it through WIF to impersonate the
+   deployer SA — **no long-lived service account keys**;
+2. runs Cloud Build (under the same deployer SA) to build + push a new image
+   tagged with the short git sha;
+3. runs `terraform apply` to roll Cloud Run to that image;
+4. smoke-tests `/health`.
+
+- **Live**: https://ajoa-backend-evzkfuxfda-uc.a.run.app/health
+- **Step-by-step + war stories**: `deploy/README.md`
+- **Operator runbook**: `deploy/gcp/README.md`
+
+The git tags `local-deploy` and `remote-deploy-success` mark the two reference
+points — the first locally-run `terraform apply` and the first fully-green CI
+deploy, respectively.
