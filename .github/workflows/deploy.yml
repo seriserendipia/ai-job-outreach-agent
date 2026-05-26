@@ -3,15 +3,13 @@ name: deploy
 # Build + push image to Artifact Registry, then terraform apply to roll
 # the Cloud Run service forward to the new image. Auth is OIDC via WIF —
 # no long-lived service account keys.
+#
+# Manual-only trigger: the GCP project was torn down after the portfolio
+# demo, so push-on-master is intentionally disabled to keep the README's
+# "deploy" status badge from going red. To redeploy: rebuild the project
+# from scratch (see deploy/gcp/README.md), then either re-enable the push
+# trigger or invoke this workflow manually from the Actions tab.
 on:
-  push:
-    branches: [master]
-    # Only re-deploy when something that can actually change the running
-    # service changes. Pure-docs changes shouldn't trigger a build.
-    paths:
-      - "backend/**"
-      - "deploy/**"
-      - ".github/workflows/deploy.yml"
   workflow_dispatch:
 
 concurrency:
